@@ -1,4 +1,3 @@
-<script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxC-AA3Al1351HVlp-XYQMRNs-VxB4NJi8Kk_WomnWnEDcpdGOib-aScNpx5qouyXacRw/exec";
 const WATER_RATE = 30;
 
@@ -42,20 +41,16 @@ document.addEventListener("input", () => {
   });
 });
 
-// 🔹 โหลดจาก Google Sheet (แทน localStorage)
-window.onload = function () {
+// 🔹 โหลดข้อมูลจาก Google Sheet
+window.addEventListener("DOMContentLoaded", () => {
   fetch(API_URL)
     .then(res => res.json())
     .then(data => {
 
-      console.log("DATA FROM SHEET:", data); // 🔥 debug
-
       document.querySelectorAll("#table tr").forEach((row, i) => {
         if (i === 0) return;
 
-        const house = `2/${i}`;
-        const d = data.find(x => x.house === house);
-
+        const d = data.find(x => x.house === `2/${i}`);
         if (!d) return;
 
         row.querySelector(".name").value = d.name || "";
@@ -69,11 +64,8 @@ window.onload = function () {
 
       document.dispatchEvent(new Event("input"));
     })
-    .catch(err => {
-      console.error("โหลดข้อมูลไม่สำเร็จ:", err);
-      alert("ดึงข้อมูลจาก Google Sheet ไม่ได้");
-    });
-};
+    .catch(() => alert("โหลดข้อมูลไม่สำเร็จ"));
+});
 
 // 🔹 บันทึก
 function save() {
@@ -149,4 +141,3 @@ function goReceipt() {
   localStorage.setItem("billData", JSON.stringify(data));
   window.location.href = "receipt.html";
 }
-</script>
