@@ -4,31 +4,46 @@
 <meta charset="UTF-8">
 <title>ใบเสร็จ</title>
 
+<!-- PNG -->
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
-body { font-family: sans-serif; background:#eee; }
+body {
+  font-family: sans-serif;
+  background: #eee;
+}
 
 .bill {
-  width: 800px;
+  width: 794px; /* A4 */
   margin: 20px auto;
   background: #fff;
   border: 2px solid #000;
   padding: 20px;
 }
 
+h2, h3 {
+  text-align: center;
+  margin: 5px 0;
+}
+
 table {
   width:100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
-td,th {
+td, th {
   border:1px solid #000;
   padding:6px;
   text-align:center;
 }
 
-.left { text-align:left; }
+.left {
+  text-align:left;
+}
 
 .btn {
   margin: 10px;
@@ -40,20 +55,23 @@ td,th {
 
 <body>
 
-<button class="btn" onclick="downloadAll()">📥 ดาวน์โหลดทั้งหมด</button>
+<button class="btn" onclick="downloadAll()">📥 PNG ทั้งหมด</button>
+<button class="btn" onclick="saveAllPDF()">📄 PDF ทั้งหมด</button>
 
 <div id="container"></div>
 
 <script>
 const data = JSON.parse(localStorage.getItem("billData")) || [];
+
 let html = "";
 
 data.forEach((d, index) => {
+
   html += `
   <div class="bill" id="bill-${index}">
-    <h2 style="text-align:center;">บิลค่าเช่าห้อง</h2>
-    <h3 style="text-align:center;">ห้อง ${d.house}</h3>
-    <h3 style="text-align:center;">${new Date().toLocaleDateString("th-TH", {month:"long",year:"numeric"})}</h3>
+    <h2>บิลค่าเช่าห้อง</h2>
+    <h3>ห้อง ${d.house}</h3>
+    <h3>${new Date().toLocaleDateString("th-TH", {month:"long",year:"numeric"})}</h3>
 
     <table>
       <tr>
@@ -66,10 +84,10 @@ data.forEach((d, index) => {
 
       <tr>
         <td class="left">ค่าน้ำ</td>
-        <td>${d.wStart}</td>
-        <td>${d.wEnd}</td>
-        <td>${d.unit}</td>
-        <td>${d.water}</td>
+        <td>${d.wStart ?? 0}</td>
+        <td>${d.wEnd ?? 0}</td>
+        <td>${d.unit ?? 0}</td>
+        <td>${d.water ?? 0}</td>
       </tr>
 
       <tr>
@@ -77,30 +95,32 @@ data.forEach((d, index) => {
         <td>-</td>
         <td>-</td>
         <td>-</td>
-        <td>${d.elec}</td>
+        <td>${d.elec ?? 0}</td>
       </tr>
 
       <tr>
         <td class="left">ค่าอื่นๆ</td>
         <td colspan="3">-</td>
-        <td>${d.other}</td>
+        <td>${d.other ?? 0}</td>
       </tr>
 
       <tr>
         <td class="left">ค่าเช่า</td>
         <td colspan="3">-</td>
-        <td>${d.rent}</td>
+        <td>${d.rent ?? 0}</td>
       </tr>
 
       <tr>
         <td class="left"><b>รวม</b></td>
         <td colspan="3"></td>
-        <td><b>${d.total}</b></td>
+        <td><b>${d.total ?? 0}</b></td>
       </tr>
     </table>
 
     <br>
-    <button onclick="downloadOne(${index})">📥 ดาวน์โหลดห้องนี้</button>
+
+    <button onclick="downloadOne(${index})">📥 PNG ห้องนี้</button>
+    <button onclick="savePDF(${index})">📄 PDF ห้องนี้</button>
 
     <br><br>
     <div>ชำระภายในวันที่ 5 ของเดือน</div>
@@ -117,30 +137,68 @@ data.forEach((d, index) => {
 document.getElementById("container").innerHTML = html;
 
 
-// 🔥 โหลดทีละห้อง
+// 📥 PNG ทีละห้อง
 function downloadOne(i) {
   const d = data[i];
+
   html2canvas(document.querySelector(`#bill-${i}`)).then(canvas => {
     let link = document.createElement("a");
-    link.download = `bill_${d.house.replace("/", "-")}.png`; // 🔥 ตรงนี้
+    link.download = `bill_${d.house.replace("/", "-")}.png`;
     link.href = canvas.toDataURL();
     link.click();
   });
 }
 
-// 🔥 โหลดทั้งหมด
+// 📥 PNG ทั้งหมด
 function downloadAll() {
   document.querySelectorAll(".bill").forEach((el, i) => {
     const d = data[i];
+
     html2canvas(el).then(canvas => {
       let link = document.createElement("a");
-      link.download = `bill_${d.house.replace("/", "-")}.png`; // 🔥 ตรงนี้
+      link.download = `bill_${d.house.replace("/", "-")}.png`;
       link.href = canvas.toDataURL();
       link.click();
     });
   });
 }
-  
+
+// 📄 PDF ทีละห้อง
+function savePDF(i) {
+  const d = data[i];
+  const el = document.getElementById(`bill-${i}`);
+
+  html2pdf()
+    .from(el)
+    .set({
+      margin: 10,
+      filename: `bill_${d.house.replace("/", "-")}.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+    })
+    .save();
+}
+
+// 📄 PDF ทั้งหมด
+function saveAllPDF() {
+  let container = document.createElement("div");
+
+  document.querySelectorAll(".bill").forEach(el => {
+    let clone = el.cloneNode(true);
+    clone.style.pageBreakAfter = "always";
+    container.appendChild(clone);
+  });
+
+  html2pdf()
+    .from(container)
+    .set({
+      margin: 10,
+      filename: `all_bills.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+    })
+    .save();
+}
 </script>
 
 </body>
