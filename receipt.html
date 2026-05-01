@@ -200,7 +200,7 @@ function savePDF(i) {
   html2pdf()
   .from(el)
   .set({
-    margin: 0,
+    margin: 5,
     filename: `bill_${d.house.replace("/", "-")}.pdf`,
     html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
@@ -219,14 +219,14 @@ function saveAllPDF() {
   });
 
   html2pdf()
-    .from(container)
-    .set({
-      margin: 5,
-      filename: `all_bills.pdf`,
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
-    })
-    .save();
+  .from(el)
+  .set({
+    margin: 0,
+    filename: `bill_${d.house.replace("/", "-")}.pdf`,
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
+  })
+  .save();
 }
 </script>
 
