@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>ใบเสร็จ</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #eee;
-    }
+<meta charset="UTF-8">
+<title>ใบเสร็จ</title>
 
-    .bill {
-      width: 800px;
-      margin: 20px auto;
-      background: #fff;
-      border: 2px solid #000;
-      padding: 20px;
-    }
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-    h1, h2 {
-      text-align: center;
-      margin: 5px 0;
-    }
+<style>
+body { font-family: sans-serif; background:#eee; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+.bill {
+  width: 800px;
+  margin: 20px auto;
+  background: #fff;
+  border: 2px solid #000;
+  padding: 20px;
+}
 
-    td, th {
-      border: 1px solid #000;
-      padding: 6px;
-      text-align: center;
-    }
+table {
+  width:100%;
+  border-collapse: collapse;
+}
 
-    .left {
-      text-align: left;
-    }
-  </style>
+td,th {
+  border:1px solid #000;
+  padding:6px;
+  text-align:center;
+}
+
+.left { text-align:left; }
+
+.btn {
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+</style>
 </head>
+
 <body>
+
+<button class="btn" onclick="downloadAll()">📥 ดาวน์โหลดทั้งหมด</button>
 
 <div id="container"></div>
 
 <script>
 const data = JSON.parse(localStorage.getItem("billData")) || [];
-
 let html = "";
 
-data.forEach(d => {
+data.forEach((d, index) => {
   html += `
-  <div class="bill">
-    <h1>บิลค่าเช่าห้อง</h1>
-    <h2>ห้อง ${d.house}</h2>
-    <h2>${new Date().toLocaleDateString("th-TH", { month: "long", year: "numeric" })}</h2>
+  <div class="bill" id="bill-${index}">
+    <h2 style="text-align:center;">บิลค่าเช่าห้อง</h2>
+    <h3 style="text-align:center;">ห้อง ${d.house}</h3>
+    <h3 style="text-align:center;">${new Date().toLocaleDateString("th-TH", {month:"long",year:"numeric"})}</h3>
 
     <table>
       <tr>
@@ -100,6 +100,9 @@ data.forEach(d => {
     </table>
 
     <br>
+    <button onclick="downloadOne(${index})">📥 ดาวน์โหลดห้องนี้</button>
+
+    <br><br>
     <div>ชำระภายในวันที่ 5 ของเดือน</div>
 
     <br><br>
@@ -112,6 +115,29 @@ data.forEach(d => {
 });
 
 document.getElementById("container").innerHTML = html;
+
+
+// 🔥 โหลดทีละห้อง
+function downloadOne(i) {
+  html2canvas(document.querySelector(`#bill-${i}`)).then(canvas => {
+    let link = document.createElement("a");
+    link.download = `bill_${i+1}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+}
+
+// 🔥 โหลดทั้งหมด
+function downloadAll() {
+  document.querySelectorAll(".bill").forEach((el, i) => {
+    html2canvas(el).then(canvas => {
+      let link = document.createElement("a");
+      link.download = `bill_${i+1}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  });
+}
 </script>
 
 </body>
