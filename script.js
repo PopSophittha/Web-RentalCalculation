@@ -120,3 +120,25 @@ function goReceipt() {
   localStorage.setItem("billData", JSON.stringify(data));
   window.location.href = "receipt.html";
 }
+
+window.onload = function () {
+  const saved = JSON.parse(localStorage.getItem("formData")) || [];
+
+  document.querySelectorAll("#table tr").forEach((row, i) => {
+    if (i === 0) return;
+
+    const d = saved[i - 1];
+    if (!d) return;
+
+    row.querySelector(".name").value = d.name || "";
+    row.querySelector(".rent").value = d.rent || "";
+    row.querySelector(".water_start").value = d.water_start || "";
+    row.querySelector(".water_end").value = d.water_end || "";
+    row.querySelector(".electric").value = d.electric || "";
+    row.querySelector(".other").value = d.other || "";
+    row.querySelector(".note").value = d.note || "";
+  });
+
+  // 👉 trigger คำนวณใหม่
+  document.dispatchEvent(new Event("input"));
+};
