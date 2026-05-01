@@ -105,15 +105,15 @@ function goReceipt() {
 
     data.push({
       house: `2/${i}`,
-      name,
-      rent,
-      elec,
-      other,
-      wStart,
-      wEnd,
-      unit,
-      water,
-      total
+      name: name,
+      rent: rent,
+      elec: elec,
+      other: other,
+      wStart: wStart,
+      wEnd: wEnd,
+      unit: unit,
+      water: water,
+      total: total
     });
   });
 
