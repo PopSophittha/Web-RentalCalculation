@@ -3,7 +3,7 @@ const WATER_RATE = 30;
 
 const table = document.getElementById("table");
 
-// สร้าง 20 หลัง (2/1 - 2/20)
+// สร้าง 20 หลัง
 for (let i = 1; i <= 20; i++) {
   let row = table.insertRow();
 
@@ -12,11 +12,9 @@ for (let i = 1; i <= 20; i++) {
     <td><input class="name"></td>
     <td><input class="rent"></td>
 
-    <td>
-      <input class="water_start" placeholder="เริ่ม">
-      <input class="water_end" placeholder="สุดท้าย">
-      <div class="water_unit">0</div>
-    </td>
+    <td><input class="water_start"></td>
+    <td><input class="water_end"></td>
+    <td class="water_unit">0</td>
 
     <td><input class="electric"></td>
     <td><input class="other"></td>
@@ -28,7 +26,7 @@ for (let i = 1; i <= 20; i++) {
 
 // คำนวณ
 document.addEventListener("input", () => {
-  document.querySelectorAll("table tr").forEach((row, i) => {
+  document.querySelectorAll("#table tr").forEach((row, i) => {
     if (i === 0) return;
 
     let rent = +row.querySelector(".rent")?.value || 0;
@@ -41,7 +39,7 @@ document.addEventListener("input", () => {
     let unit = Math.max(wEnd - wStart, 0);
     let water = unit * WATER_RATE;
 
-    row.querySelector(".water_unit").innerText = `${unit} หน่วย (${water} บาท)`;
+    row.querySelector(".water_unit").innerText = unit;
 
     let total = rent + elec + water + other;
     row.querySelector(".total").innerText = total;
@@ -52,7 +50,7 @@ document.addEventListener("input", () => {
 function save() {
   let rows = [];
 
-  document.querySelectorAll("table tr").forEach((row, i) => {
+  document.querySelectorAll("#table tr").forEach((row, i) => {
     if (i === 0) return;
 
     let wStart = +row.querySelector(".water_start")?.value || 0;
@@ -81,4 +79,22 @@ function save() {
   })
   .then(res => res.json())
   .then(() => alert("บันทึกแล้ว"));
+}
+
+// 👉 ออกบิล
+function goReceipt() {
+  let data = [];
+
+  document.querySelectorAll("#table tr").forEach((row, i) => {
+    if (i === 0) return;
+
+    data.push({
+      house: `2/${i}`,
+      name: row.querySelector(".name").value,
+      total: row.querySelector(".total").innerText
+    });
+  });
+
+  localStorage.setItem("billData", JSON.stringify(data));
+  window.location.href = "receipt.html";
 }
