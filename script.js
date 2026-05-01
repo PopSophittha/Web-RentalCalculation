@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbzhJ7qq1lXDhdwVN6MhWFpZjCMeVbNQOEr0MID6FCFUyBGCxbgbhmyRYvMEYT-i-ySsJA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxC-AA3Al1351HVlp-XYQMRNs-VxB4NJi8Kk_WomnWnEDcpdGOib-aScNpx5qouyXacRw/exec";
 const WATER_RATE = 30;
 
 const table = document.getElementById("table");
