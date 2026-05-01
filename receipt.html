@@ -31,13 +31,11 @@ body {
   width: 210mm;
   height: 148mm;
   margin: 0 auto;
-  background: #fff;
-  border: 2px solid #000;
   padding: 10mm;
+  border: 2px solid #000;
+  background: #fff;
   box-sizing: border-box;
-}
 
-.bill {
   page-break-inside: avoid;
 }
 
@@ -210,29 +208,37 @@ function savePDF(i) {
 
 // 📄 PDF ทั้งหมด
 function saveAllPDF() {
-  let container = document.createElement("div");
+  let wrapper = document.createElement("div");
 
   document.querySelectorAll(".bill").forEach(el => {
     let clone = el.cloneNode(true);
+
+    // 🔥 FIX ขนาด A5
+    clone.style.width = "210mm";
+    clone.style.height = "148mm";
+    clone.style.margin = "0";
+    clone.style.padding = "10mm";
+    clone.style.boxSizing = "border-box";
+
     clone.style.pageBreakAfter = "always";
-    container.appendChild(clone);
+
+    wrapper.appendChild(clone);
   });
 
-  // 🔥 ต้อง append เข้า DOM ก่อน
-  document.body.appendChild(container);
+  document.body.appendChild(wrapper);
 
-  html2pdf()
-    .from(container) // ✅ ใช้ container
-    .set({
-      margin: 0,
-      filename: `all_bills.pdf`, // ✅ ไม่ใช้ d แล้ว
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
-    })
-    .save()
-    .then(() => {
-      document.body.removeChild(container); // 🔥 ลบออกหลังเสร็จ
-    });
+  setTimeout(() => {
+    html2pdf()
+      .from(wrapper)
+      .set({
+        margin: 0,
+        filename: "all_bills.pdf",
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
+      })
+      .save()
+      .then(() => document.body.removeChild(wrapper));
+  }, 300);
 }
 </script>
 
