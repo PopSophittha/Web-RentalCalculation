@@ -4,10 +4,7 @@
 <meta charset="UTF-8">
 <title>ใบเสร็จ</title>
 
-<!-- PNG -->
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
-<!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -16,23 +13,33 @@ body {
   background: #eee;
 }
 
+.toolbar {
+  text-align: center;
+  margin: 20px;
+}
+
+.btn {
+  padding: 10px 15px;
+  margin: 5px;
+  cursor: pointer;
+}
+
 .bill {
-  width: 794px; /* A4 */
+  width: 794px;
   margin: 20px auto;
   background: #fff;
   border: 2px solid #000;
   padding: 20px;
 }
 
-h2, h3 {
+.actions {
   text-align: center;
-  margin: 5px 0;
+  margin-bottom: 20px;
 }
 
 table {
   width:100%;
   border-collapse: collapse;
-  margin-top: 10px;
 }
 
 td, th {
@@ -44,19 +51,16 @@ td, th {
 .left {
   text-align:left;
 }
-
-.btn {
-  margin: 10px;
-  padding: 10px;
-  cursor: pointer;
-}
 </style>
 </head>
 
 <body>
 
-<button class="btn" onclick="downloadAll()">📥 PNG ทั้งหมด</button>
-<button class="btn" onclick="saveAllPDF()">📄 PDF ทั้งหมด</button>
+<!-- 🔥 ปุ่มรวม -->
+<div class="toolbar">
+  <button class="btn" onclick="downloadAll()">📥 PNG ทั้งหมด</button>
+  <button class="btn" onclick="saveAllPDF()">📄 PDF ทั้งหมด</button>
+</div>
 
 <div id="container"></div>
 
@@ -68,10 +72,25 @@ let html = "";
 data.forEach((d, index) => {
 
   html += `
+  
+  <!-- 🔥 ปุ่มของแต่ละห้อง (อยู่นอกบิล) -->
+  <div class="actions">
+    <button class="btn" onclick="downloadOne(${index})">
+      📥 PNG ห้อง ${d.house}
+    </button>
+
+    <button class="btn" onclick="savePDF(${index})">
+      📄 PDF ห้อง ${d.house}
+    </button>
+  </div>
+
+  <!-- 📄 ตัวบิล -->
   <div class="bill" id="bill-${index}">
-    <h2>บิลค่าเช่าห้อง</h2>
-    <h3>ห้อง ${d.house}</h3>
-    <h3>${new Date().toLocaleDateString("th-TH", {month:"long",year:"numeric"})}</h3>
+    <h2 style="text-align:center;">บิลค่าเช่าห้อง</h2>
+    <h3 style="text-align:center;">ห้อง ${d.house}</h3>
+    <h3 style="text-align:center;">
+      ${new Date().toLocaleDateString("th-TH", {month:"long",year:"numeric"})}
+    </h3>
 
     <table>
       <tr>
@@ -118,11 +137,6 @@ data.forEach((d, index) => {
     </table>
 
     <br>
-
-    <button onclick="downloadOne(${index})">📥 PNG ห้องนี้</button>
-    <button onclick="savePDF(${index})">📄 PDF ห้องนี้</button>
-
-    <br><br>
     <div>ชำระภายในวันที่ 5 ของเดือน</div>
 
     <br><br>
