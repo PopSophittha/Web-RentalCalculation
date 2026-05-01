@@ -119,9 +119,10 @@ document.getElementById("container").innerHTML = html;
 
 // 🔥 โหลดทีละห้อง
 function downloadOne(i) {
+  const d = data[i];
   html2canvas(document.querySelector(`#bill-${i}`)).then(canvas => {
     let link = document.createElement("a");
-    link.download = `bill_${i+1}.png`;
+    link.download = `bill_${d.house.replace("/", "-")}.png`; // 🔥 ตรงนี้
     link.href = canvas.toDataURL();
     link.click();
   });
@@ -130,14 +131,16 @@ function downloadOne(i) {
 // 🔥 โหลดทั้งหมด
 function downloadAll() {
   document.querySelectorAll(".bill").forEach((el, i) => {
+    const d = data[i];
     html2canvas(el).then(canvas => {
       let link = document.createElement("a");
-      link.download = `bill_${i+1}.png`;
+      link.download = `bill_${d.house.replace("/", "-")}.png`; // 🔥 ตรงนี้
       link.href = canvas.toDataURL();
       link.click();
     });
   });
 }
+  
 </script>
 
 </body>
