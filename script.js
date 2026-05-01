@@ -72,7 +72,9 @@ function save() {
       total: row.querySelector(".total").innerText
     });
   });
-
+  
+  localStorage.setItem("formData", JSON.stringify(rows));
+  
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({ rows })
