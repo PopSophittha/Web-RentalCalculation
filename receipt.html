@@ -218,15 +218,21 @@ function saveAllPDF() {
     container.appendChild(clone);
   });
 
+  // 🔥 ต้อง append เข้า DOM ก่อน
+  document.body.appendChild(container);
+
   html2pdf()
-  .from(el)
-  .set({
-    margin: 0,
-    filename: `bill_${d.house.replace("/", "-")}.pdf`,
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
-  })
-  .save();
+    .from(container) // ✅ ใช้ container
+    .set({
+      margin: 0,
+      filename: `all_bills.pdf`, // ✅ ไม่ใช้ d แล้ว
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
+    })
+    .save()
+    .then(() => {
+      document.body.removeChild(container); // 🔥 ลบออกหลังเสร็จ
+    });
 }
 </script>
 
