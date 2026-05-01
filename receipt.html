@@ -185,10 +185,10 @@ function savePDF(i) {
   html2pdf()
     .from(el)
     .set({
-      margin: 10,
+      margin: 5,
       filename: `bill_${d.house.replace("/", "-")}.pdf`,
       html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      jsPDF: { unit: "mm", format: "a5", orientation: "landscape" } // 🔥 ตรงนี้
     })
     .save();
 }
@@ -206,10 +206,10 @@ function saveAllPDF() {
   html2pdf()
     .from(container)
     .set({
-      margin: 10,
+      margin: 5,
       filename: `all_bills.pdf`,
       html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      jsPDF: { unit: "mm", format: "a5", orientation: "landscape" } // 🔥 ตรงนี้
     })
     .save();
 }
