@@ -1,4 +1,4 @@
-const API_URL = "PUT_YOUR_SCRIPT_URL_HERE";
+const API_URL = "https://script.google.com/macros/s/AKfycbykekiql--2yusfglJ1QpX7J5Bz3q9YbeUNXinxjMo0lrhLHqKK60U8wfyStkt5Purf9w/exec";
 
 // สร้าง 20 แถว
 const table = document.getElementById("table");
