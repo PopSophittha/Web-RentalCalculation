@@ -1,33 +1,182 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>ระบบค่าเช่า</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>ระบบค่าเช่า</title>
+
+<style>
+body { font-family: sans-serif; padding:20px; }
+table { border-collapse: collapse; }
+td, th { border:1px solid #ccc; padding:6px; }
+input { width:80px; }
+</style>
+
 </head>
 <body>
 
-<h2>ระบบค่าเช่า v1.0.3</h2>
+<h2>ระบบค่าเช่า v1.1.1</h2>
 
 <table id="table">
-  <tr>
-    <th>บ้าน</th>
-    <th>ชื่อ</th>
-    <th>ค่าเช่า</th>
-    <th>น้ำ (เริ่ม)</th>
-    <th>น้ำ (สิ้นสุด)</th>
-    <th>หน่วย</th>
-    <th>ไฟ</th>
-    <th>อื่นๆ</th>
-    <th>หมายเหตุ</th>
-    <th>รวม</th>
-  </tr>
+<tr>
+  <th>บ้าน</th>
+  <th>ชื่อ</th>
+  <th>ค่าเช่า</th>
+  <th>น้ำเริ่ม</th>
+  <th>น้ำสิ้นสุด</th>
+  <th>หน่วย</th>
+  <th>ไฟ</th>
+  <th>อื่นๆ</th>
+  <th>หมายเหตุ</th>
+  <th>รวม</th>
+</tr>
 </table>
 
 <br>
 <button onclick="save()">💾 บันทึก</button>
 <button onclick="goReceipt()">🧾 ออกบิล</button>
+<button onclick="clearData()">🗑 ล้าง</button>
 
-<script src="script.js"></script>
+<script>
+const WATER_RATE = 30;
+const table = document.getElementById("table");
+
+// 🔥 สร้าง 20 ห้อง
+for (let i = 1; i <= 20; i++) {
+  let row = table.insertRow();
+
+  row.innerHTML = `
+    <td>2/${i}</td>
+    <td><input class="name"></td>
+    <td><input class="rent"></td>
+    <td><input class="water_start"></td>
+    <td><input class="water_end"></td>
+    <td class="unit">0</td>
+    <td><input class="electric"></td>
+    <td><input class="other"></td>
+    <td><input class="note"></td>
+    <td class="total">0</td>
+  `;
+}
+
+// 🔥 คำนวณ
+document.addEventListener("input", () => {
+  document.querySelectorAll("#table tr").forEach((row, i) => {
+    if (i === 0) return;
+
+    let rent = +row.querySelector(".rent").value || 0;
+    let elec = +row.querySelector(".electric").value || 0;
+    let other = +row.querySelector(".other").value || 0;
+
+    let wStart = +row.querySelector(".water_start").value || 0;
+    let wEnd = +row.querySelector(".water_end").value || 0;
+
+    let unit = Math.max(wEnd - wStart, 0);
+    let water = unit * WATER_RATE;
+
+    row.querySelector(".unit").innerText = unit;
+
+    let total = rent + elec + water + other;
+    row.querySelector(".total").innerText = total;
+  });
+});
+
+// 💾 บันทึก
+function save() {
+  let rows = [];
+
+  document.querySelectorAll("#table tr").forEach((row, i) => {
+    if (i === 0) return;
+
+    let wStart = +row.querySelector(".water_start").value || 0;
+    let wEnd = +row.querySelector(".water_end").value || 0;
+    let unit = Math.max(wEnd - wStart, 0);
+    let water = unit * WATER_RATE;
+
+    rows.push({
+      house: `2/${i}`,
+      name: row.querySelector(".name").value,
+      rent: row.querySelector(".rent").value,
+      water_start: wStart,
+      water_end: wEnd,
+      electric: row.querySelector(".electric").value,
+      other: row.querySelector(".other").value,
+      note: row.querySelector(".note").value,
+      total: row.querySelector(".total").innerText
+    });
+  });
+
+  localStorage.setItem("formData", JSON.stringify(rows));
+  alert("บันทึกแล้ว");
+}
+
+// 🔁 โหลดข้อมูลกลับ
+window.onload = function () {
+  const saved = JSON.parse(localStorage.getItem("formData")) || [];
+
+  document.querySelectorAll("#table tr").forEach((row, i) => {
+    if (i === 0) return;
+
+    const d = saved[i - 1];
+    if (!d) return;
+
+    row.querySelector(".name").value = d.name || "";
+    row.querySelector(".rent").value = d.rent || "";
+    row.querySelector(".water_start").value = d.water_start || "";
+    row.querySelector(".water_end").value = d.water_end || "";
+    row.querySelector(".electric").value = d.electric || "";
+    row.querySelector(".other").value = d.other || "";
+    row.querySelector(".note").value = d.note || "";
+  });
+
+  document.dispatchEvent(new Event("input"));
+};
+
+// 🧾 ออกบิล
+function goReceipt() {
+  let data = [];
+
+  document.querySelectorAll("#table tr").forEach((row, i) => {
+    if (i === 0) return;
+
+    let name = row.querySelector(".name").value;
+    if (!name) return;
+
+    let rent = +row.querySelector(".rent").value || 0;
+    let elec = +row.querySelector(".electric").value || 0;
+    let other = +row.querySelector(".other").value || 0;
+
+    let wStart = +row.querySelector(".water_start").value || 0;
+    let wEnd = +row.querySelector(".water_end").value || 0;
+
+    let unit = Math.max(wEnd - wStart, 0);
+    let water = unit * WATER_RATE;
+
+    let total = rent + elec + water + other;
+
+    data.push({
+      house: `2/${i}`,
+      name,
+      rent,
+      elec,
+      other,
+      wStart,
+      wEnd,
+      unit,
+      water,
+      total
+    });
+  });
+
+  localStorage.setItem("billData", JSON.stringify(data));
+  window.location.href = "receipt.html";
+}
+
+// 🗑 ล้างข้อมูล
+function clearData() {
+  localStorage.removeItem("formData");
+  location.reload();
+}
+</script>
+
 </body>
 </html>
