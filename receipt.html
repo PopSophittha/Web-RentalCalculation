@@ -2,18 +2,117 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Receipt</title>
+  <title>ใบเสร็จ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #eee;
+    }
+
+    .bill {
+      width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      border: 2px solid #000;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin: 5px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    td, th {
+      border: 1px solid #000;
+      padding: 6px;
+      text-align: center;
+    }
+
+    .left {
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
 
-<div id="receipt">
-  <h2>ใบเสร็จรับเงิน</h2>
-  <div id="list"></div>
-</div>
+<div id="container"></div>
 
-<button onclick="download()">📥 ดาวน์โหลด PNG</button>
+<script>
+const data = JSON.parse(localStorage.getItem("billData")) || [];
 
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="receipt.js"></script>
+let html = "";
+
+data.forEach(d => {
+  html += `
+  <div class="bill">
+    <h1>บิลค่าเช่าห้อง</h1>
+    <h2>ห้อง ${d.house}</h2>
+    <h2>${new Date().toLocaleDateString("th-TH", { month: "long", year: "numeric" })}</h2>
+
+    <table>
+      <tr>
+        <th>รายการ</th>
+        <th>เลขครั้งก่อน</th>
+        <th>เลขครั้งนี้</th>
+        <th>หน่วย</th>
+        <th>ราคา</th>
+      </tr>
+
+      <tr>
+        <td class="left">ค่าน้ำ</td>
+        <td>${d.wStart}</td>
+        <td>${d.wEnd}</td>
+        <td>${d.unit}</td>
+        <td>${d.water}</td>
+      </tr>
+
+      <tr>
+        <td class="left">ค่าไฟ</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>${d.elec}</td>
+      </tr>
+
+      <tr>
+        <td class="left">ค่าอื่นๆ</td>
+        <td colspan="3">-</td>
+        <td>${d.other}</td>
+      </tr>
+
+      <tr>
+        <td class="left">ค่าเช่า</td>
+        <td colspan="3">-</td>
+        <td>${d.rent}</td>
+      </tr>
+
+      <tr>
+        <td class="left"><b>รวม</b></td>
+        <td colspan="3"></td>
+        <td><b>${d.total}</b></td>
+      </tr>
+    </table>
+
+    <br>
+    <div>ชำระภายในวันที่ 5 ของเดือน</div>
+
+    <br><br>
+    <div style="text-align:center;">
+      ลงชื่อ _______________________<br>
+      เจ้าของบ้าน
+    </div>
+  </div>
+  `;
+});
+
+document.getElementById("container").innerHTML = html;
+</script>
+
 </body>
 </html>
