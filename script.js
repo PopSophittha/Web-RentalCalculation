@@ -124,23 +124,28 @@ function goReceipt() {
 }
 
 window.onload = function () {
-  const saved = JSON.parse(localStorage.getItem("formData")) || [];
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
 
-  document.querySelectorAll("#table tr").forEach((row, i) => {
-    if (i === 0) return;
+      document.querySelectorAll("#table tr").forEach((row, i) => {
+        if (i === 0) return;
 
-    const d = saved[i - 1];
-    if (!d) return;
+        const house = `2/${i}`;
+        const d = data.find(x => x.house === house);
 
-    row.querySelector(".name").value = d.name || "";
-    row.querySelector(".rent").value = d.rent || "";
-    row.querySelector(".water_start").value = d.water_start || "";
-    row.querySelector(".water_end").value = d.water_end || "";
-    row.querySelector(".electric").value = d.electric || "";
-    row.querySelector(".other").value = d.other || "";
-    row.querySelector(".note").value = d.note || "";
-  });
+        if (!d) return;
 
-  // 👉 trigger คำนวณใหม่
-  document.dispatchEvent(new Event("input"));
+        row.querySelector(".name").value = d.name || "";
+        row.querySelector(".rent").value = d.rent || "";
+        row.querySelector(".water_start").value = d.water_start || "";
+        row.querySelector(".water_end").value = d.water_end || "";
+        row.querySelector(".electric").value = d.electric || "";
+        row.querySelector(".other").value = d.other || "";
+        row.querySelector(".note").value = d.note || "";
+      });
+
+      // trigger คำนวณใหม่
+      document.dispatchEvent(new Event("input"));
+    });
 };
