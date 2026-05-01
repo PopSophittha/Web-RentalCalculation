@@ -88,10 +88,32 @@ function goReceipt() {
   document.querySelectorAll("#table tr").forEach((row, i) => {
     if (i === 0) return;
 
+    let name = row.querySelector(".name").value;
+    if (!name) return;
+
+    let rent = +row.querySelector(".rent")?.value || 0;
+    let elec = +row.querySelector(".electric")?.value || 0;
+    let other = +row.querySelector(".other")?.value || 0;
+
+    let wStart = +row.querySelector(".water_start")?.value || 0;
+    let wEnd = +row.querySelector(".water_end")?.value || 0;
+
+    let unit = Math.max(wEnd - wStart, 0);
+    let water = unit * 30;
+
+    let total = rent + elec + water + other;
+
     data.push({
       house: `2/${i}`,
-      name: row.querySelector(".name").value,
-      total: row.querySelector(".total").innerText
+      name,
+      rent,
+      elec,
+      other,
+      wStart,
+      wEnd,
+      unit,
+      water,
+      total
     });
   });
 
