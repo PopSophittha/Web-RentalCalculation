@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ใบเสร็จ</title>
+<title>Receipt</title>
 
 <!-- PNG -->
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -108,15 +108,15 @@ data.forEach((d, index) => {
 
     <table>
       <tr>
-        <th>รายการ</th>
-        <th>เลขครั้งก่อน</th>
-        <th>เลขครั้งนี้</th>
-        <th>หน่วย</th>
-        <th>ราคา</th>
+        <th>Detail</th>
+        <th>Previous water</th>
+        <th>Current water</th>
+        <th>Unit</th>
+        <th>Price</th>
       </tr>
 
       <tr>
-        <td class="left">ค่าน้ำ</td>
+        <td class="left">Water</td>
         <td>${d.wStart ?? 0}</td>
         <td>${d.wEnd ?? 0}</td>
         <td>${d.unit ?? 0}</td>
@@ -124,7 +124,7 @@ data.forEach((d, index) => {
       </tr>
 
       <tr>
-        <td class="left">ค่าไฟ</td>
+        <td class="left">Electricity</td>
         <td>-</td>
         <td>-</td>
         <td>-</td>
@@ -132,31 +132,31 @@ data.forEach((d, index) => {
       </tr>
 
       <tr>
-        <td class="left">ค่าอื่นๆ</td>
+        <td class="left">Other</td>
         <td colspan="3">-</td>
         <td>${d.other ?? 0}</td>
       </tr>
 
       <tr>
-        <td class="left">ค่าเช่า</td>
+        <td class="left">Rental</td>
         <td colspan="3">-</td>
         <td>${d.rent ?? 0}</td>
       </tr>
 
       <tr>
-        <td class="left"><b>รวม</b></td>
+        <td class="left"><b>Total</b></td>
         <td colspan="3"></td>
         <td><b>${d.total ?? 0}</b></td>
       </tr>
     </table>
 
     <br>
-    <div>ชำระภายในวันที่ 5 ของเดือน</div>
+    <div>Paying on the 5th of every month</div>
 
     <br><br>
     <div style="text-align:center;">
-      ลงชื่อ _______________________<br>
-      เจ้าของบ้าน
+      Sign _______________________<br>
+      Owner
     </div>
   </div>
   `;
