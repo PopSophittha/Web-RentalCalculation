@@ -96,10 +96,20 @@ function save() {
 
   fetch(API_URL, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json"   // 🔥 ต้องมี
+    },
     body: JSON.stringify({ rows })
   })
   .then(res => res.json())
-  .then(() => alert("บันทึกแล้ว"));
+  .then(res => {
+    console.log(res);
+    alert("บันทึกแล้ว");
+  })
+  .catch(err => {
+    console.error(err);
+    alert("บันทึกไม่สำเร็จ");
+  });
 }
 
 // 🔹 ออกบิล
