@@ -26,17 +26,16 @@ body {
 }
 
 .bill {
-  width: 200mm;           /* ❗ ลดจาก 210 */
-  height: 135mm;          /* ❗ fix ให้พอดี A5 */
+  width: 200mm;
+  height: 130mm;              /* ❗ ลดลงจากเดิม */
   margin: 0 auto 10mm auto;
   background: #fff;
-  border: 1px solid #000;
-  padding: 8mm;
+  padding: 8mm 10mm;          /* ❗ เพิ่ม padding ล่าง */
   box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* ❗ ไม่ดันลงสุด */
 
   page-break-after: always;
 }
@@ -155,7 +154,7 @@ data.forEach((d, index) => {
     <div>Paying on the 5th of every month</div>
 
     <br><br>
-    <div style="text-align:center;">
+    <div style="margin-top: auto; text-align:center;">
       Sign _______________________<br>
       Owner
     </div>
