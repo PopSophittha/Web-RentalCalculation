@@ -144,6 +144,7 @@ function goReceipt() {
       wEnd,
       unit,
       water,
+      note,
       total
     });
   });
