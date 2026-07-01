@@ -132,6 +132,7 @@ function goReceipt() {
     let unit = Math.max(wEnd - wStart, 0);
     let water = unit * WATER_RATE;
 
+    let note = +row.querySelector(".note").value;
     let total = rent + elec + water + other;
 
     data.push({
