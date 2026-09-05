@@ -80,7 +80,8 @@ function save() {
     let water = unit * WATER_RATE;
 
     rows.push({
-      house: `2/${i}`,
+      // house: `2/${i}`,
+      house: row.querySelector(".name").value,
       name: row.querySelector(".name").value,
       rent: row.querySelector(".rent").value,
       water_start: wStart,
