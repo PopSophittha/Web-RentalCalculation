@@ -97,16 +97,16 @@ data.forEach((d, index) => {
   
   <div class="actions">
     <button class="btn" onclick="downloadOne(${index})">
-      📥 PNG ห้อง ${d.house}
+      📥 PNG ห้อง ${d.name}
     </button>
     <button class="btn" onclick="savePDF(${index})">
-      📄 PDF ห้อง ${d.house}
+      📄 PDF ห้อง ${d.name}
     </button>
   </div>
 
   <div class="bill" id="bill-${index}">
     <h2 style="text-align:center;">Monthly Rental</h2>
-    <h3 style="text-align:center;">House No. ${d.house}</h3>
+    <h3 style="text-align:center;">House No. ${d.name}</h3>
     <h3 style="text-align:center;">
       ${new Date().toLocaleDateString("en-US", {month:"long",year:"numeric"})}
     </h3>
@@ -180,7 +180,7 @@ function downloadOne(i) {
 
   html2canvas(document.querySelector(`#bill-${i}`)).then(canvas => {
     let link = document.createElement("a");
-    link.download = `bill_${d.house.replace("/", "-")}.png`;
+    link.download = `bill_${d.name.replace("/", "-")}.png`;
     link.href = canvas.toDataURL();
     link.click();
   });
@@ -193,7 +193,7 @@ function downloadAll() {
 
     html2canvas(el).then(canvas => {
       let link = document.createElement("a");
-      link.download = `bill_${d.house.replace("/", "-")}.png`;
+      link.download = `bill_${d.name.replace("/", "-")}.png`;
       link.href = canvas.toDataURL();
       link.click();
     });
@@ -209,7 +209,7 @@ function savePDF(i) {
     .from(el)
     .set({
       margin: [5,5,5,5], // ❗ กันขอบ
-      filename: `bill_${d.house.replace("/", "-")}.pdf`,
+      filename: `bill_${d.name.replace("/", "-")}.pdf`,
       html2canvas: { scale: 1.5 }, // ❗ ลด scale
       jsPDF: { unit: "mm", format: "a5", orientation: "landscape" }
     })
