@@ -137,7 +137,8 @@ function goReceipt() {
     let total = rent + elec + water + other;
 
     data.push({
-      house: `2/${i}`,
+      // house: `2/${i}`,
+      name,
       name,
       rent,
       elec,
