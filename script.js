@@ -1,5 +1,4 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbzsj13KIFkvNySAzw2pdGgs5jr7-qrWYlrHU5YaSnIDP1O1k0CZiCgx3PB6jo3Tm-SW3Q/exec";
-const WATER_RATE = 30;
 
 const table = document.getElementById("table");
 
@@ -9,37 +8,21 @@ for (let i = 1; i <= 20; i++) {
 
   row.innerHTML = `
     <td>2/${i}</td>
-    <td><input class="name"></td>
-    <td><input class="rent"></td>
-    <td><input class="water_start"></td>
-    <td><input class="water_end"></td>
-    <td class="unit">0</td>
-    <td><input class="electric"></td>
-    <td><input class="other"></td>
-    <td><input class="note"></td>
+    <td class="name"></td>
+    <td class="rent"></td>
+    <td class="water_start"></td>
+    <td class="water_end"></td>
+    <td class="wUnit"></td>
+    <td class="water"></td>
+    <td class="electric_start"></td>
+    <td class="electric_end"></td>
+    <td class="eUnit"></td>
+    <td class="electric"></td>
+    <td class="other"></td>
+    <td class="note"></td>
     <td class="total">0</td>
   `;
 }
-
-// 🔹 คำนวณ
-document.addEventListener("input", () => {
-  document.querySelectorAll("#table tr").forEach((row, i) => {
-    if (i === 0) return;
-
-    let rent = +row.querySelector(".rent").value || 0;
-    let elec = +row.querySelector(".electric").value || 0;
-    let other = +row.querySelector(".other").value || 0;
-
-    let wStart = +row.querySelector(".water_start").value || 0;
-    let wEnd = +row.querySelector(".water_end").value || 0;
-
-    let unit = Math.max(wEnd - wStart, 0);
-    let water = unit * WATER_RATE;
-
-    row.querySelector(".unit").innerText = unit;
-    row.querySelector(".total").innerText = rent + elec + water + other;
-  });
-});
 
 // 🔹 โหลดข้อมูลจาก Google Sheet
 window.addEventListener("DOMContentLoaded", () => {
@@ -55,63 +38,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
         row.querySelector(".name").value = d.name || "";
         row.querySelector(".rent").value = d.rent || "";
+        
         row.querySelector(".water_start").value = d.water_start || "";
         row.querySelector(".water_end").value = d.water_end || "";
+        row.querySelector(".wUnit").value = d.wUnit || "";
+        row.querySelector(".water").value = d.water || "";
+        
+        row.querySelector(".electric_start").value = d.electric_start || "";
+        row.querySelector(".electric_end").value = d.electric_end || "";
+        row.querySelector(".eUnit").value = d.eUnit || "";
         row.querySelector(".electric").value = d.electric || "";
+        
         row.querySelector(".other").value = d.other || "";
         row.querySelector(".note").value = d.note || "";
+        row.querySelector(".total").value = d.total || "";
       });
 
       document.dispatchEvent(new Event("input"));
     })
     .catch(() => alert("โหลดข้อมูลไม่สำเร็จ"));
 });
-
-// 🔹 บันทึก
-function save() {
-  let rows = [];
-
-  document.querySelectorAll("#table tr").forEach((row, i) => {
-    if (i === 0) return;
-
-    let wStart = +row.querySelector(".water_start").value || 0;
-    let wEnd = +row.querySelector(".water_end").value || 0;
-    let unit = Math.max(wEnd - wStart, 0);
-    let water = unit * WATER_RATE;
-
-    rows.push({
-      // house: `2/${i}`,
-      house: row.querySelector(".name").value,
-      name: row.querySelector(".name").value,
-      rent: row.querySelector(".rent").value,
-      water_start: wStart,
-      water_end: wEnd,
-      water_unit: unit,
-      water: water,
-      electric: row.querySelector(".electric").value,
-      other: row.querySelector(".other").value,
-      note: row.querySelector(".note").value,
-      total: row.querySelector(".total").innerText
-    });
-  });
-
-  fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"   // 🔥 ต้องมี
-    },
-    body: JSON.stringify({ rows })
-  })
-  .then(res => res.json())
-  .then(res => {
-    console.log(res);
-    alert("บันทึกแล้ว");
-  })
-  .catch(err => {
-    console.error(err);
-    alert("บันทึกไม่สำเร็จ");
-  });
-}
 
 // 🔹 ออกบิล
 function goReceipt() {
