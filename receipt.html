@@ -124,15 +124,15 @@ data.forEach((d, index) => {
         <td class="left">Water</td>
         <td>${d.wStart ?? 0}</td>
         <td>${d.wEnd ?? 0}</td>
-        <td>${d.unit ?? 0}</td>
+        <td>${d.wUnit ?? 0}</td>
         <td>${formatNumber(d.water)}</td>
       </tr>
 
       <tr>
         <td class="left">Electricity</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
+        <td>${d.eStart ?? 0}</td>
+        <td>${d.eEnd ?? 0}</td>
+        <td>${d.eUnit ?? 0}</td>
         <td>${formatNumber(d.elec)}</td>
       </tr>
 
@@ -160,7 +160,11 @@ data.forEach((d, index) => {
     <div><b>Note:</b> ${d.note || "-"}</div>
 
     <br>
-    <div>Paying on the 5th of every month</div>
+    <div>
+    Paying on the 5th of every month
+    ธนาคารกรุงเทพ เลขที่บัญชี 668-0-676134
+    ชื่อบัญชี โศภิษฐา บุญมนภัทร
+    </div>
 
     <br>
     <div style="margin-top: auto; text-align:center;">
