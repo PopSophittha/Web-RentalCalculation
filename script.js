@@ -24,77 +24,128 @@ for (let i = 1; i <= 20; i++) {
   `;
 }
 
+
 // 🔹 โหลดข้อมูลจาก Google Sheet
 window.addEventListener("DOMContentLoaded", () => {
+
   fetch(API_URL)
     .then(res => res.json())
     .then(data => {
 
       document.querySelectorAll("#table tr").forEach((row, i) => {
+
         if (i === 0) return;
 
-        const d = data.find(x => x.house === `2/${i}`);
+        const house = `2/${i}`;
+
+        const d = data.find(x => x.house === house);
+
         if (!d) return;
 
-        row.querySelector(".name").value = d.name || "";
-        row.querySelector(".rent").value = d.rent || "";
-        
-        row.querySelector(".water_start").value = d.water_start || "";
-        row.querySelector(".water_end").value = d.water_end || "";
-        row.querySelector(".wUnit").value = d.wUnit || "";
-        row.querySelector(".water").value = d.water || "";
-        
-        row.querySelector(".electric_start").value = d.electric_start || "";
-        row.querySelector(".electric_end").value = d.electric_end || "";
-        row.querySelector(".eUnit").value = d.eUnit || "";
-        row.querySelector(".electric").value = d.electric || "";
-        
-        row.querySelector(".other").value = d.other || "";
-        row.querySelector(".note").value = d.note || "";
-        row.querySelector(".total").value = d.total || "";
+
+        // 🔹 แสดงข้อมูลด้วย textContent
+        row.querySelector(".name").textContent = d.name || "";
+        row.querySelector(".rent").textContent = d.rent || "";
+
+        // น้ำ
+        row.querySelector(".water_start").textContent = d.water_start || "";
+        row.querySelector(".water_end").textContent = d.water_end || "";
+        row.querySelector(".wUnit").textContent = d.wUnit || "";
+        row.querySelector(".water").textContent = d.water || "";
+
+        // ไฟ
+        row.querySelector(".electric_start").textContent = d.electric_start || "";
+        row.querySelector(".electric_end").textContent = d.electric_end || "";
+        row.querySelector(".eUnit").textContent = d.eUnit || "";
+        row.querySelector(".electric").textContent = d.electric || "";
+
+        // อื่นๆ
+        row.querySelector(".other").textContent = d.other || "";
+
+        // หมายเหตุ
+        row.querySelector(".note").textContent = d.note || "";
+
+        // รวม
+        row.querySelector(".total").textContent = d.total || "0";
       });
 
-      document.dispatchEvent(new Event("input"));
     })
-    .catch(() => alert("โหลดข้อมูลไม่สำเร็จ"));
+    .catch(error => {
+      console.error(error);
+      alert("โหลดข้อมูลไม่สำเร็จ");
+    });
+
 });
+
 
 // 🔹 ออกบิล
 function goReceipt() {
+
   let data = [];
 
   document.querySelectorAll("#table tr").forEach((row, i) => {
+
     if (i === 0) return;
 
-    let name = row.querySelector(".name").value;
+    let name = row.querySelector(".name").textContent.trim();
+
+    // ไม่มีชื่อ = ไม่ออกบิล
     if (!name) return;
 
-    let rent = +row.querySelector(".rent").value || 0;
+
+    // ค่าเช่า
+    let rent =
+      Number(row.querySelector(".rent").textContent) || 0;
+
 
     // น้ำ
-    let wStart = +row.querySelector(".water_start").value || 0;
-    let wEnd = +row.querySelector(".water_end").value || 0;
-    let wUnit = +row.querySelector(".wUnit").value || 0;
-    let water = +row.querySelector(".water").value || 0;
+    let wStart =
+      Number(row.querySelector(".water_start").textContent) || 0;
+
+    let wEnd =
+      Number(row.querySelector(".water_end").textContent) || 0;
+
+    let wUnit =
+      Number(row.querySelector(".wUnit").textContent) || 0;
+
+    let water =
+      Number(row.querySelector(".water").textContent) || 0;
+
 
     // ไฟ
-    let eStart = +row.querySelector(".electric_start").value || 0;
-    let eEnd = +row.querySelector(".electric_end").value || 0;
-    let eUnit = +row.querySelector(".eUnit").value || 0;
-    let elec = +row.querySelector(".electric").value || 0;
+    let eStart =
+      Number(row.querySelector(".electric_start").textContent) || 0;
+
+    let eEnd =
+      Number(row.querySelector(".electric_end").textContent) || 0;
+
+    let eUnit =
+      Number(row.querySelector(".eUnit").textContent) || 0;
+
+    let elec =
+      Number(row.querySelector(".electric").textContent) || 0;
+
 
     // อื่นๆ
-    let other = +row.querySelector(".other").value || 0;
+    let other =
+      Number(row.querySelector(".other").textContent) || 0;
+
 
     // หมายเหตุ
-    let note = row.querySelector(".note").value || "";
+    let note =
+      row.querySelector(".note").textContent.trim();
 
-    // รวม
-    let total = rent + water + elec + other;
+
+    // 🔹 คำนวณยอดรวมใหม่
+    let total = Number(row.querySelector(".total").textContent) || 0;
+
 
     data.push({
+
       house: `2/${i}`,
+
       name,
+
       rent,
 
       wStart,
@@ -108,12 +159,23 @@ function goReceipt() {
       elec,
 
       other,
+
       note,
+
       total
+
     });
+
   });
 
-  localStorage.setItem("billData", JSON.stringify(data));
 
+  // 🔹 เก็บข้อมูลไว้ให้ receipt.html
+  localStorage.setItem(
+    "billData",
+    JSON.stringify(data)
+  );
+
+
+  // 🔹 ไปหน้าออกบิล
   window.location.href = "receipt.html";
 }
