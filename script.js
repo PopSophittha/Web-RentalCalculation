@@ -75,9 +75,8 @@ function goReceipt() {
 
     let wStart = +row.querySelector(".water_start").value || 0;
     let wEnd = +row.querySelector(".water_end").value || 0;
-
-    let unit = Math.max(wEnd - wStart, 0);
-    let water = unit * WATER_RATE;
+    let wUnit = +row.querySelector(".wUnit").value || 0;
+    let water = +row.querySelector(".water").value || 0;
 
     let note = row.querySelector(".note").value;
     let total = rent + elec + water + other;
@@ -87,12 +86,15 @@ function goReceipt() {
       name,
       name,
       rent,
-      elec,
-      other,
       wStart,
       wEnd,
-      unit,
+      wUnit,
       water,
+      eStart,
+      eEnd,
+      eUnit,
+      elec,
+      other,
       note,
       total
     });
