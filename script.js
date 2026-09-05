@@ -70,30 +70,43 @@ function goReceipt() {
     if (!name) return;
 
     let rent = +row.querySelector(".rent").value || 0;
-    let elec = +row.querySelector(".electric").value || 0;
-    let other = +row.querySelector(".other").value || 0;
 
+    // น้ำ
     let wStart = +row.querySelector(".water_start").value || 0;
     let wEnd = +row.querySelector(".water_end").value || 0;
     let wUnit = +row.querySelector(".wUnit").value || 0;
     let water = +row.querySelector(".water").value || 0;
 
-    let note = row.querySelector(".note").value;
-    let total = rent + elec + water + other;
+    // ไฟ
+    let eStart = +row.querySelector(".electric_start").value || 0;
+    let eEnd = +row.querySelector(".electric_end").value || 0;
+    let eUnit = +row.querySelector(".eUnit").value || 0;
+    let elec = +row.querySelector(".electric").value || 0;
+
+    // อื่นๆ
+    let other = +row.querySelector(".other").value || 0;
+
+    // หมายเหตุ
+    let note = row.querySelector(".note").value || "";
+
+    // รวม
+    let total = rent + water + elec + other;
 
     data.push({
-      // house: `2/${i}`,
-      name,
+      house: `2/${i}`,
       name,
       rent,
+
       wStart,
       wEnd,
       wUnit,
       water,
+
       eStart,
       eEnd,
       eUnit,
       elec,
+
       other,
       note,
       total
@@ -101,5 +114,6 @@ function goReceipt() {
   });
 
   localStorage.setItem("billData", JSON.stringify(data));
+
   window.location.href = "receipt.html";
 }
