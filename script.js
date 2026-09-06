@@ -12,11 +12,11 @@ for (let i = 1; i <= 20; i++) {
     <td class="rent"></td>
     <td class="water_start"></td>
     <td class="water_end"></td>
-    <td class="wUnit"></td>
+    <td class="water_unit"></td>
     <td class="water"></td>
     <td class="electric_start"></td>
     <td class="electric_end"></td>
-    <td class="eUnit"></td>
+    <td class="electric_unit"></td>
     <td class="electric"></td>
     <td class="other"></td>
     <td class="note"></td>
@@ -50,13 +50,13 @@ window.addEventListener("DOMContentLoaded", () => {
         // น้ำ
         row.querySelector(".water_start").textContent = d.water_start || "";
         row.querySelector(".water_end").textContent = d.water_end || "";
-        row.querySelector(".wUnit").textContent = d.wUnit || "";
+        row.querySelector(".water_unit").textContent = d.water_unit || "";
         row.querySelector(".water").textContent = d.water || "";
 
         // ไฟ
         row.querySelector(".electric_start").textContent = d.electric_start || "";
         row.querySelector(".electric_end").textContent = d.electric_end || "";
-        row.querySelector(".eUnit").textContent = d.eUnit || "";
+        row.querySelector(".electric_unit").textContent = d.electric_unit || "";
         row.querySelector(".electric").textContent = d.electric || "";
 
         // อื่นๆ
@@ -106,7 +106,7 @@ function goReceipt() {
       Number(row.querySelector(".water_end").textContent) || 0;
 
     let wUnit =
-      Number(row.querySelector(".wUnit").textContent) || 0;
+      Number(row.querySelector(".water_unit").textContent) || 0;
 
     let water =
       Number(row.querySelector(".water").textContent) || 0;
@@ -120,7 +120,7 @@ function goReceipt() {
       Number(row.querySelector(".electric_end").textContent) || 0;
 
     let eUnit =
-      Number(row.querySelector(".eUnit").textContent) || 0;
+      Number(row.querySelector(".electric_unit").textContent) || 0;
 
     let elec =
       Number(row.querySelector(".electric").textContent) || 0;
